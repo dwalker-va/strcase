@@ -30,12 +30,26 @@ import (
 )
 
 // ToSnake converts a string to snake_case
+func (c *Converter) ToSnake(s string) string {
+	return c.ToDelimited(s, '_')
+}
+
+// ToSnake converts a string to snake_case
 func ToSnake(s string) string {
 	return ToDelimited(s, '_')
 }
 
+func (c *Converter) ToSnakeWithIgnore(s string, ignore string) string {
+	return c.ToScreamingDelimited(s, '_', ignore, false)
+}
+
 func ToSnakeWithIgnore(s string, ignore string) string {
 	return ToScreamingDelimited(s, '_', ignore, false)
+}
+
+// ToScreamingSnake converts a string to SCREAMING_SNAKE_CASE
+func (c *Converter) ToScreamingSnake(s string) string {
+	return c.ToScreamingDelimited(s, '_', "", true)
 }
 
 // ToScreamingSnake converts a string to SCREAMING_SNAKE_CASE
@@ -44,13 +58,29 @@ func ToScreamingSnake(s string) string {
 }
 
 // ToKebab converts a string to kebab-case
+func (c *Converter) ToKebab(s string) string {
+	return c.ToDelimited(s, '-')
+}
+
+// ToKebab converts a string to kebab-case
 func ToKebab(s string) string {
 	return ToDelimited(s, '-')
 }
 
 // ToScreamingKebab converts a string to SCREAMING-KEBAB-CASE
+func (c *Converter) ToScreamingKebab(s string) string {
+	return c.ToScreamingDelimited(s, '-', "", true)
+}
+
+// ToScreamingKebab converts a string to SCREAMING-KEBAB-CASE
 func ToScreamingKebab(s string) string {
 	return ToScreamingDelimited(s, '-', "", true)
+}
+
+// ToDelimited converts a string to delimited.snake.case
+// (in this case `delimiter = '.'`)
+func (c *Converter) ToDelimited(s string, delimiter uint8) string {
+	return c.ToScreamingDelimited(s, delimiter, "", false)
 }
 
 // ToDelimited converts a string to delimited.snake.case
@@ -63,7 +93,7 @@ func ToDelimited(s string, delimiter uint8) string {
 // (in this case `delimiter = '.'; screaming = true`)
 // or delimited.snake.case
 // (in this case `delimiter = '.'; screaming = false`)
-func ToScreamingDelimited(s string, delimiter uint8, ignore string, screaming bool) string {
+func (c *Converter) ToScreamingDelimited(s string, delimiter uint8, ignore string, screaming bool) string {
 	s = strings.TrimSpace(s)
 	n := strings.Builder{}
 	n.Grow(len(s) + 2) // nominal 2 bytes of extra space for inserted delimiters
@@ -112,4 +142,12 @@ func ToScreamingDelimited(s string, delimiter uint8, ignore string, screaming bo
 	}
 
 	return n.String()
+}
+
+// ToScreamingDelimited converts a string to SCREAMING.DELIMITED.SNAKE.CASE
+// (in this case `delimiter = '.'; screaming = true`)
+// or delimited.snake.case
+// (in this case `delimiter = '.'; screaming = false`)
+func ToScreamingDelimited(s string, delimiter uint8, ignore string, screaming bool) string {
+	return defaultConverter.ToScreamingDelimited(s, delimiter, ignore, screaming)
 }

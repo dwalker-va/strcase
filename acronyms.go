@@ -1,10 +1,12 @@
 package strcase
 
-var uppercaseAcronym = map[string]string{
-	"ID": "id",
-}
-
 // ConfigureAcronym allows you to add additional words which will be considered acronyms
 func ConfigureAcronym(key, val string) {
-	uppercaseAcronym[key] = val
+	defaultConverter.ConfigureAcronym(key, val)
+}
+
+func (c *Converter) ConfigureAcronym(key, val string) {
+	c.lock.Lock()
+	c.uppercaseAcronym[key] = val
+	c.lock.Unlock()
 }

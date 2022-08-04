@@ -30,14 +30,16 @@ import (
 )
 
 // Converts a string to CamelCase
-func toCamelInitCase(s string, initCase bool) string {
+func (c *Converter) toCamelInitCase(s string, initCase bool) string {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return s
 	}
-	if a, ok := uppercaseAcronym[s]; ok {
+	c.lock.RLock()
+	if a, ok := c.uppercaseAcronym[s]; ok {
 		s = a
 	}
+	c.lock.RUnlock()
 
 	n := strings.Builder{}
 	n.Grow(len(s))
@@ -70,11 +72,21 @@ func toCamelInitCase(s string, initCase bool) string {
 }
 
 // ToCamel converts a string to CamelCase
+func (c *Converter) ToCamel(s string) string {
+	return c.toCamelInitCase(s, true)
+}
+
+// ToCamel converts a string to CamelCase
 func ToCamel(s string) string {
-	return toCamelInitCase(s, true)
+	return defaultConverter.toCamelInitCase(s, true)
+}
+
+// ToLowerCamel converts a string to lowerCamelCase
+func (c *Converter) ToLowerCamel(s string) string {
+	return c.toCamelInitCase(s, false)
 }
 
 // ToLowerCamel converts a string to lowerCamelCase
 func ToLowerCamel(s string) string {
-	return toCamelInitCase(s, false)
+	return defaultConverter.toCamelInitCase(s, false)
 }

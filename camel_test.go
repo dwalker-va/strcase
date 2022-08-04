@@ -115,7 +115,7 @@ func TestCustomAcronymsToCamel(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			ConfigureAcronym(test.acronymKey, test.acronymValue)
 			if result := ToCamel(test.acronymKey); result != test.expected {
-				t.Errorf("expected custom acronym result %s, got %s", test.expected, result)
+				t.Errorf("expectedFromDefault custom acronym result %s, got %s", test.expected, result)
 			}
 		})
 	}
@@ -151,7 +151,7 @@ func TestCustomAcronymsToLowerCamel(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			ConfigureAcronym(test.acronymKey, test.acronymValue)
 			if result := ToLowerCamel(test.acronymKey); result != test.expected {
-				t.Errorf("expected custom acronym result %s, got %s", test.expected, result)
+				t.Errorf("expectedFromDefault custom acronym result %s, got %s", test.expected, result)
 			}
 		})
 	}
